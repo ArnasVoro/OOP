@@ -48,7 +48,6 @@ double skaiciuotiMediana(studentas A)
 
 int main()
 {
-    int k;
     vector<studentas> grupe;
     studentas A;
 
@@ -56,21 +55,49 @@ int main()
     int n;
     cin >> n;
 
+    int nd;
+    cout << "Ar zinomas namu darbu skaicius?" << endl; cout << "1 - Taip" << endl; cout << "2 - Ne" << endl; cout << "Pasirinkite: "; cin >> nd;
+    
+
     for (int i = 0; i < n; i++)
     {
+        
         cout << "Iveskite studento varda ir pavarde: ";
         cin >> A.vardas >> A.pavarde;
 
-        cout << "Iveskite semestro pazymiu kieki: ";
-        cin >> k;
-
-        for (int i = 0; i < k; i++)
+        if (nd==1)
         {
-            int a;
-            cout << "Iveskite " << i + 1 << " pazymi: ";
-            cin >> a;
-            A.paz.push_back(a);
+            int k;
+            cout << "Iveskite namu darbu kieki: ";
+            cin >> k;
+
+            for (int i=0; i <k; i++)
+            {
+                int a;
+                cout << "Iveskite " << i + 1 << " pazymi: ";
+                cin >> a;
+                A.paz.push_back(a);
+            }
         }
+        else if (nd== 2)
+        {
+            string ivestis;
+            int a;
+
+            cout << "Iveskite namu darbu pazymius(veskite skaiciu ir spauskite enter arba 'N' kad sustoti) :" <<endl;
+
+            while (true)
+            {
+                cin >> ivestis;
+
+                if (ivestis == "N" || ivestis == "n")
+                    break;
+
+                a = std::stoi(ivestis);
+                A.paz.push_back(a);
+            }
+        }
+       
 
         cout << "Iveskite egzamino pazymi: ";
         cin >> A.exam;
@@ -83,7 +110,7 @@ int main()
     }
 
     int pasirinkimas;
-    cout<<"pasirinkite kaip norit atspausdint duomenis" << endl;
+    cout << "pasirinkite kaip norit atspausdint duomenis" << endl;
     cout << endl; cout << "1 - Vidurkis" << endl; cout << "2 - Mediana" << endl; cout << "3 - Abu" << endl; cout << "Pasirinkite: "; cin >> pasirinkimas;
 
     switch (pasirinkimas)
@@ -134,7 +161,7 @@ int main()
             break;
 
         default:
-            cout << "Neegzistuojaa toks pasirinkimas." << endl;
+            cout << "Neegzistuoja toks pasirinkimas." << endl;
     }
 
     return 0;
