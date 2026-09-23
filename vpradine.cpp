@@ -83,6 +83,7 @@ int main()
 	{
 		cout << "Iveskite studento varda ir pavarde: ";
 		cin >> A.vardas >> A.pavarde;
+
 		if (generuoti == 1)
 		{
 			int k;
@@ -117,13 +118,20 @@ int main()
 			if (nd == 1)
 			{
 				int k;
-				cout <<"Iveskite namu darbu kieki: ";
-				cin >>k;
-            	for (int i = 0; i < k; i++)
+				cout << "Iveskite namu darbu kieki: ";
+				cin >> k;
+
+				for (int i = 0; i < k; i++)
 				{
 					int a;
-					cout << "Iveskite " << i + 1 << " pazymi: ";
-					cin >> a;
+
+					do
+					{
+						cout << "Iveskite " << i + 1 << " pazymi (1-10): ";
+						cin >> a;
+					}
+					while (a < 1 || a > 10);
+
 					A.paz.push_back(a);
 				}
 			}
@@ -131,7 +139,9 @@ int main()
 			{
 				string ivestis;
 				int a;
-			     cout << "Iveskite namu darbu pazymius (iveskite skaiciu arba 'N' kad sustoti):" << endl;
+
+				cout << "Iveskite namu darbu pazymius (iveskite skaiciu arba 'N' kad sustoti):" << endl;
+
 				while (true)
 				{
 					cin >> ivestis;
@@ -140,12 +150,20 @@ int main()
 						break;
 
 					a = std::stoi(ivestis);
-					A.paz.push_back(a);
+
+					if (a >= 1 && a <= 10)
+						A.paz.push_back(a);
+					else
+						cout << "Pazymys turi buti nuo 1 iki 10." << endl;
 				}
 			}
 
-			cout << "Iveskite egzamino pazymi: ";
-			cin >> A.exam;
+			do
+			{
+				cout << "Iveskite egzamino pazymi (1-10): ";
+				cin >> A.exam;
+			}
+			while (A.exam < 1 || A.exam > 10);
 		}
 
 		grupe.push_back(A);
@@ -189,6 +207,7 @@ int main()
 		{
 			double mediana = skaiciuotiMediana(B);
 			double galutinis = 0.4 * mediana + 0.6 * B.exam;
+
 			cout << left << setw(15) << B.pavarde << setw(15) << B.vardas << fixed << setprecision(2) << galutinis << endl;
 		}
 		break;
