@@ -1,0 +1,7 @@
+Vardas                   Pavardė                    ND1   ND2   ND3   ND4   ND5   ND6   ND7   ND8   Egz.
+Arnoldas                 Voroneckij                  8     7     9     6     10    8     7     9     8
+Mantas                   Kazlauskas                  6     8     7     9     5     10    8     6     7
+Gabija                   Petrauskaitė                9     6     8     7     9     5     10    8     9
+Lukas                    Jankauskas                 5     7     6     10    8     9     6     7     8
+Emilija                  Stank               10    9     7     8     6     7     9     10    9
+Tomas                    Žukauskas                   7     5     10    6     8     7     9     5     6
