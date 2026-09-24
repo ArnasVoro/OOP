@@ -7,7 +7,6 @@
 #include <ctime>
 #include <fstream>
 #include <sstream>
-
 using std::string;
 using std::vector;
 using std::cout;
@@ -176,7 +175,7 @@ int main()
 
                 cout << endl;
 
-                // Egzamino pazymys taip pat dedamas i vektoriu
+                
                 int egz = rand() % 10 + 1;
 
                 A.paz.push_back(egz);
@@ -238,7 +237,6 @@ int main()
                 }
                 while (egz < 1 || egz > 10);
 
-                // Egzaminas taip pat dedamas i ta pati vektoriu
                 A.paz.push_back(egz);
             }
 
@@ -272,7 +270,6 @@ int main()
         {
             double vidurkis = skaiciuotiVidurki(B);
 
-            // Paskutinis vektoriaus elementas yra egzaminas
             int egz = B.paz[B.paz.size() - 1];
 
             double galutinis = 0.4 * vidurkis + 0.6 * egz;
@@ -291,7 +288,6 @@ int main()
         {
             double mediana = skaiciuotiMediana(B);
 
-            // Paskutinis vektoriaus elementas yra egzaminas
             int egz = B.paz[B.paz.size() - 1];
 
             double galutinis = 0.4 * mediana + 0.6 * egz;
