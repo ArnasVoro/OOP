@@ -18,6 +18,10 @@ using std::setw;
 using std::fixed;
 using std::setprecision;
 using std::sort;
+using std::ifstream;
+using std::getline;
+using std::stringstream;
+
 
 struct studentas
 {
@@ -70,11 +74,7 @@ int main()
 
     int budas;
 
-    cout << "Kaip norite ivesti duomenis?" << endl;
-    cout << "1 - Ivesti duomenis rankiniu budu" << endl;
-    cout << "2 - Nuskaityti duomenis is failo" << endl;
-    cout << "Pasirinkite: ";
-    cin >> budas;
+    cout << "Kaip norite ivesti duomenis?" << endl;cout << "1 - Ivesti duomenis rankiniu budu" << endl;cout << "2 - Nuskaityti duomenis is failo" << endl;cout << "Pasirinkite: ";cin >> budas;
 
     if (budas != 1 && budas != 2)
     {
@@ -84,7 +84,7 @@ int main()
 
     if (budas == 2)
     {
-        std::ifstream failas("kursiokai.txt");
+        ifstream failas("kursiokai.txt");
 
         if (!failas)
         {
@@ -94,11 +94,11 @@ int main()
 
         string eilute;
 
-        std::getline(failas, eilute);
+        getline(failas, eilute);
 
-        while (std::getline(failas, eilute))
+        while (getline(failas, eilute))
         {
-            std::stringstream ss(eilute);
+            stringstream ss(eilute);
 
             A.paz.clear();
 
@@ -127,11 +127,7 @@ int main()
 
         int nd;
 
-        cout << "Ar zinomas namu darbu skaicius?" << endl;
-        cout << "1 - Taip" << endl;
-        cout << "2 - Ne" << endl;
-        cout << "Pasirinkite: ";
-        cin >> nd;
+        cout << "Ar zinomas namu darbu skaicius?" << endl;cout << "1 - Taip" << endl;cout << "2 - Ne" << endl; cout << "Pasirinkite: "; cin >> nd;
 
         if (nd != 1 && nd != 2)
         {
@@ -255,12 +251,7 @@ int main()
 
     int pasirinkimas;
 
-    cout << endl;
-    cout << "Pasirinkite kaip norit atspausdinti duomenis" << endl;
-    cout << endl;
-    cout << "1 - Vidurkis" << endl;
-    cout << "2 - Mediana" << endl;
-    cout << "3 - Abu" << endl;
+    cout << endl; cout << "Pasirinkite kaip norit atspausdinti duomenis" << endl; cout << endl;cout << "1 - Vidurkis" << endl;cout << "2 - Mediana" << endl;cout << "3 - Abu" << endl;
     cout << "Pasirinkite: ";
     cin >> pasirinkimas;
 
