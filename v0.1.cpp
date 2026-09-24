@@ -7,6 +7,7 @@
 #include <ctime>
 #include <fstream>
 #include <sstream>
+
 using std::string;
 using std::vector;
 using std::cout;
@@ -18,11 +19,13 @@ using std::fixed;
 using std::setprecision;
 using std::sort;
 
+
 struct studentas
 {
     string vardas, pavarde;
     vector<int> paz;
 };
+
 
 double skaiciuotiVidurki(studentas A)
 {
@@ -35,6 +38,7 @@ double skaiciuotiVidurki(studentas A)
 
     return suma / (A.paz.size() - 1);
 }
+
 
 double skaiciuotiMediana(studentas A)
 {
@@ -54,6 +58,7 @@ double skaiciuotiMediana(studentas A)
     else
         return (nd[n / 2 - 1] + nd[n / 2]) / 2.0;
 }
+
 
 int main()
 {
@@ -88,7 +93,6 @@ int main()
 
         string eilute;
 
-       
         std::getline(failas, eilute);
 
         while (std::getline(failas, eilute))
@@ -101,7 +105,6 @@ int main()
 
             int pazymys;
 
-        
             while (ss >> pazymys)
             {
                 A.paz.push_back(pazymys);
@@ -175,7 +178,6 @@ int main()
 
                 cout << endl;
 
-                
                 int egz = rand() % 10 + 1;
 
                 A.paz.push_back(egz);
@@ -274,7 +276,7 @@ int main()
 
             double galutinis = 0.4 * vidurkis + 0.6 * egz;
 
-            cout << left << setw(15) << B.pavarde << setw(15) << B.vardas << fixed << setprecision(2) << galutinis << endl;
+            cout << left << setw(15) << B.pavarde << setw(15) << B.vardas << setw(15) << fixed << setprecision(2) << galutinis << endl;
         }
 
         break;
@@ -292,7 +294,7 @@ int main()
 
             double galutinis = 0.4 * mediana + 0.6 * egz;
 
-            cout << left << setw(15) << B.pavarde << setw(15) << B.vardas << fixed << setprecision(2) << galutinis << endl;
+            cout << left << setw(15) << B.pavarde << setw(15) << B.vardas << setw(15) << fixed << setprecision(2) << galutinis << endl;
         }
 
         break;
