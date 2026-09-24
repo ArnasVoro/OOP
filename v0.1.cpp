@@ -102,7 +102,7 @@ int main()
 
             A.paz.clear();
 
-            ss >> A.pavarde >> A.vardas;
+            ss >> A.vardas >> A.pavarde;
 
             int pazymys;
 
