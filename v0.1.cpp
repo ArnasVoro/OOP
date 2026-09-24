@@ -19,13 +19,11 @@ using std::fixed;
 using std::setprecision;
 using std::sort;
 
-
 struct studentas
 {
     string vardas, pavarde;
     vector<int> paz;
 };
-
 
 double skaiciuotiVidurki(studentas A)
 {
@@ -38,7 +36,6 @@ double skaiciuotiVidurki(studentas A)
 
     return suma / (A.paz.size() - 1);
 }
-
 
 double skaiciuotiMediana(studentas A)
 {
@@ -59,6 +56,10 @@ double skaiciuotiMediana(studentas A)
         return (nd[n / 2 - 1] + nd[n / 2]) / 2.0;
 }
 
+bool rikiuotiPagalVarda(studentas A, studentas B)
+{
+    return A.vardas < B.vardas;
+}
 
 int main()
 {
@@ -250,6 +251,8 @@ int main()
         }
     }
 
+    sort(grupe.begin(), grupe.end(), rikiuotiPagalVarda);
+
     int pasirinkimas;
 
     cout << endl;
@@ -265,36 +268,32 @@ int main()
     {
     case 1:
         cout << endl;
-        cout << left << setw(15) << "Pavarde" << setw(15) << "Vardas" << setw(15) << "Galutinis (Vid.)" << endl;
-        cout << "---------------------------------------------\n";
+        cout << left << setw(15) << "Pavarde" << setw(15) << "Vardas" << setw(20) << "Galutinis (Vid.)" << endl;
+        cout << "--------------------------------------------------" << endl;
 
         for (studentas B : grupe)
         {
             double vidurkis = skaiciuotiVidurki(B);
-
             int egz = B.paz[B.paz.size() - 1];
-
             double galutinis = 0.4 * vidurkis + 0.6 * egz;
 
-            cout << left << setw(15) << B.pavarde << setw(15) << B.vardas << setw(15) << fixed << setprecision(2) << galutinis << endl;
+            cout << left << setw(15) << B.pavarde << setw(15) << B.vardas << setw(20) << fixed << setprecision(2) << galutinis << endl;
         }
 
         break;
 
     case 2:
         cout << endl;
-        cout << left << setw(15) << "Pavarde" << setw(15) << "Vardas" << setw(15) << "Galutinis (Med.)" << endl;
-        cout << "---------------------------------------------\n";
+        cout << left << setw(15) << "Pavarde" << setw(15) << "Vardas" << setw(20) << "Galutinis (Med.)" << endl;
+        cout << "--------------------------------------------------" << endl;
 
         for (studentas B : grupe)
         {
             double mediana = skaiciuotiMediana(B);
-
             int egz = B.paz[B.paz.size() - 1];
-
             double galutinis = 0.4 * mediana + 0.6 * egz;
 
-            cout << left << setw(15) << B.pavarde << setw(15) << B.vardas << setw(15) << fixed << setprecision(2) << galutinis << endl;
+            cout << left << setw(15) << B.pavarde << setw(15) << B.vardas << setw(20) << fixed << setprecision(2) << galutinis << endl;
         }
 
         break;
@@ -302,13 +301,12 @@ int main()
     case 3:
         cout << endl;
         cout << left << setw(15) << "Pavarde" << setw(15) << "Vardas" << setw(20) << "Galutinis (Vid.)" << setw(20) << "Galutinis (Med.)" << endl;
-        cout << "-------------------------------------------------------------\n";
+        cout << "---------------------------------------------------------------------" << endl;
 
         for (studentas B : grupe)
         {
             double vidurkis = skaiciuotiVidurki(B);
             double mediana = skaiciuotiMediana(B);
-
             int egz = B.paz[B.paz.size() - 1];
 
             double galutinisVid = 0.4 * vidurkis + 0.6 * egz;
