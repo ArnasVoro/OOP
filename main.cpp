@@ -25,3 +25,289 @@ using std::sort;
 using std::ifstream;
 using std::getline;
 using std::stringstream;
+
+
+
+int main()
+{
+    srand(time(0));
+
+    
+    cout << "1 - Rankinis / failo rezimas (kaip v0.1)" << endl;
+    cout << "2 - Testavimo rezimas (v0.2)" << endl;
+    cout << "Pasirinkite: ";
+    int rez; cin >> rez;
+
+    if (rez == 2) {
+        int kiek;
+        cout << "Kiek paleidimu? (rekomenduojama 3): ";
+        cin >> kiek;
+        cin.ignore();
+        testuotiKeliskart(kiek);
+        return 0;
+    }
+
+    
+    vector<Studentas> grupe;
+    Studentas A;
+
+    int budas;
+
+    cout << "Kaip norite ivesti duomenis?" << endl;
+    cout << "1 - Ivesti duomenis rankiniu budu" << endl;
+    cout << "2 - Nuskaityti duomenis is failo" << endl;
+    cout << "Pasirinkite: "; cin >> budas;
+
+    if (budas != 1 && budas != 2)
+    {
+        cout << "Tokio pasirinkimo nera." << endl;
+        return 0;
+    }
+
+    if (budas == 2)
+    {
+        ifstream failas("kursiokai.txt");
+
+        if (!failas)
+        {
+            cout << "Nepavyko atidaryti failo kursiokai.txt" << endl;
+            return 0;
+        }
+
+        string eilute;
+
+        getline(failas, eilute);
+
+        while (getline(failas, eilute))
+        {
+            stringstream ss(eilute);
+
+            A.paz.clear();
+
+            ss >> A.vardas >> A.pavarde;
+
+            int pazymys;
+
+            while (ss >> pazymys)
+            {
+                A.paz.push_back(pazymys);
+            }
+
+            skaiciuotiGalutinius(A);   
+            grupe.push_back(A);
+        }
+
+        failas.close();
+
+        cout << "Duomenys sekmingai nuskaityti is failo." << endl;
+    }
+    else
+    {
+        cout << "Kiek studentu yra sarase: ";
+
+        int n;
+        cin >> n;
+
+        int nd;
+
+        cout << "Ar zinomas namu darbu skaicius?" << endl;
+        cout << "1 - Taip" << endl;
+        cout << "2 - Ne" << endl;
+        cout << "Pasirinkite: "; cin >> nd;
+
+        if (nd != 1 && nd != 2)
+        {
+            cout << "Tokio pasirinkimo nera." << endl;
+            return 0;
+        }
+
+        int generuoti;
+
+        cout << "Ar norite atsitiktinai sugeneruoti pazymius?" << endl;
+        cout << "1 - Taip" << endl;
+        cout << "2 - Ne" << endl;
+        cout << "Pasirinkite: ";
+        cin >> generuoti;
+
+        for (int i = 0; i < n; i++)
+        {
+            cout << "Iveskite studento varda ir pavarde: ";
+            cin >> A.vardas >> A.pavarde;
+
+            if (generuoti == 1)
+            {
+                int k;
+
+                if (nd == 1)
+                {
+                    cout << "Iveskite namu darbu kieki: ";
+                    cin >> k;
+                }
+                else
+                {
+                    k = rand() % 15 + 1;
+                }
+
+                cout << "Sugeneruoti namu darbu pazymiai: ";
+
+                for (int i = 0; i < k; i++)
+                {
+                    int a = rand() % 10 + 1;
+
+                    A.paz.push_back(a);
+
+                    cout << a << " ";
+                }
+
+                cout << endl;
+
+                int egz = rand() % 10 + 1;
+
+                A.paz.push_back(egz);
+
+                cout << "Sugeneruotas egzamino pazymys: " << egz << endl;
+            }
+            else
+            {
+                if (nd == 1)
+                {
+                    int k;
+
+                    cout << "Iveskite namu darbu kieki: ";
+                    cin >> k;
+
+                    for (int i = 0; i < k; i++)
+                    {
+                        int a;
+
+                        do
+                        {
+                            cout << "Iveskite " << i + 1 << " pazymi (1-10): ";
+                            cin >> a;
+                        } while (a < 1 || a > 10);
+
+                        A.paz.push_back(a);
+                    }
+                }
+                else
+                {
+                    string ivestis;
+                    int a;
+
+                    cout << "Iveskite namu darbu pazymius (iveskite skaiciu arba 'N' kad sustoti):" << endl;
+
+                    while (true)
+                    {
+                        cin >> ivestis;
+
+                        if (ivestis == "N" || ivestis == "n")
+                            break;
+
+                        a = std::stoi(ivestis);
+
+                        if (a >= 1 && a <= 10)
+                            A.paz.push_back(a);
+                        else
+                            cout << "Pazymys turi buti nuo 1 iki 10." << endl;
+                    }
+                }
+
+                int egz;
+
+                do
+                {
+                    cout << "Iveskite egzamino pazymi (1-10): ";
+                    cin >> egz;
+                } while (egz < 1 || egz > 10);
+
+                A.paz.push_back(egz);
+            }
+
+            skaiciuotiGalutinius(A);   
+            grupe.push_back(A);
+
+            A.vardas.clear();
+            A.pavarde.clear();
+            A.paz.clear();
+        }
+    }
+
+    sort(grupe.begin(), grupe.end(), rikiuotiPagalVarda);
+
+    int pasirinkimas;
+
+    cout << endl;
+    cout << "Pasirinkite kaip norit atspausdinti duomenis" << endl;
+    cout << endl;
+    cout << "1 - Vidurkis" << endl;
+    cout << "2 - Mediana" << endl;
+    cout << "3 - Abu" << endl;
+    cout << "Pasirinkite: ";
+    cin >> pasirinkimas;
+
+    switch (pasirinkimas)
+    {
+    case 1:
+        cout << endl;
+        cout << left << setw(15) << "Pavarde" << setw(15) << "Vardas"
+            << setw(20) << "Galutinis (Vid.)" << endl;
+        cout << "--------------------------------------------------" << endl;
+
+        for (Studentas B : grupe)
+        {
+            cout << left << setw(15) << B.pavarde
+                << setw(15) << B.vardas
+                << setw(20) << fixed << setprecision(2) << B.galutinisVid << endl;
+        }
+        break;
+
+    case 2:
+        cout << endl;
+        cout << left << setw(15) << "Pavarde" << setw(15) << "Vardas"
+            << setw(20) << "Galutinis (Med.)" << endl;
+        cout << "--------------------------------------------------" << endl;
+
+        for (Studentas B : grupe)
+        {
+            cout << left << setw(15) << B.pavarde
+                << setw(15) << B.vardas
+                << setw(20) << fixed << setprecision(2) << B.galutinisMed << endl;
+        }
+        break;
+
+    case 3:
+        cout << endl;
+        cout << left << setw(15) << "Pavarde" << setw(15) << "Vardas"
+            << setw(20) << "Galutinis (Vid.)"
+            << setw(20) << "Galutinis (Med.)" << endl;
+        cout << "---------------------------------------------------------------------" << endl;
+
+        for (Studentas B : grupe)
+        {
+            cout << left << setw(15) << B.pavarde
+                << setw(15) << B.vardas
+                << setw(20) << fixed << setprecision(2) << B.galutinisVid
+                << setw(20) << B.galutinisMed << endl;
+        }
+        break;
+
+    default:
+        cout << "Neegzistuoja toks pasirinkimas." << endl;
+    }
+
+    
+    cout << endl;
+    cout << "Ar skirstyti i vargsiukus/kietiakius? (1-Taip, 2-Ne): ";
+    int sk; cin >> sk;
+    if (sk == 1)
+    {
+        vector<Studentas> vargsiukai, kietiakiai;
+        skirstytiIGrupes(grupe, vargsiukai, kietiakiai, 1);
+        issaugotiIFaila("vargsiukai.txt", vargsiukai);
+        issaugotiIFaila("kietiakiai.txt", kietiakiai);
+        cout << "Issaugota: vargsiukai.txt (" << vargsiukai.size()
+            << "), kietiakiai.txt (" << kietiakiai.size() << ")" << endl;
+    }
+
+    return 0;
+}
