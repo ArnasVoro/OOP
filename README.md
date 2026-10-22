@@ -1,1 +1,3 @@
-# OOP
+CPU: AMD Ryzen 7 3800X 8-Core Processor
+RAM: 16GB DDR4 3600MHz
+SSD: EVO M.2 SSD 1TB
