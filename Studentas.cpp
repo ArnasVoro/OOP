@@ -56,3 +56,81 @@ void skaiciuotiGalutinius(Studentas& A)
     A.galutinisVid = 0.4 * skaiciuotiVidurki(A) + 0.6 * egz;
     A.galutinisMed = 0.4 * skaiciuotiMediana(A) + 0.6 * egz;
 }
+
+template <typename Container>
+void nuskaityti(const string& failas, Container& grupe)
+{
+    ifstream f(failas);
+
+    if (!f)
+        throw std::runtime_error("Nepavyko atidaryti: " + failas);
+
+    grupe.clear();
+
+    string eilute;
+    getline(f, eilute);
+
+    while (getline(f, eilute))
+    {
+        if (eilute.empty()) continue;
+
+        stringstream ss(eilute);
+        Studentas A;
+
+        ss >> A.vardas >> A.pavarde;
+
+        int pazymys;
+        while (ss >> pazymys)
+            A.paz.push_back(pazymys);
+
+        if (!A.vardas.empty() && !A.pavarde.empty() && !A.paz.empty())
+        {
+            skaiciuotiGalutinius(A);
+            grupe.push_back(A);
+        }
+    }
+}
+
+void nuskaitytiIsFailo(const string& failas, vector<Studentas>& grupe)
+{
+    nuskaityti(failas, grupe);
+}
+
+void nuskaitytiIsFailo(const string& failas, list<Studentas>& grupe)
+{
+    nuskaityti(failas, grupe);
+}
+
+template <typename Container>
+void issaugoti(const string& failas, const Container& grupe)
+{
+    ofstream f(failas);
+
+    if (!f)
+        throw std::runtime_error("Nepavyko sukurti: " + failas);
+
+    f << std::left << std::setw(15) << "Pavarde"
+        << std::setw(15) << "Vardas"
+        << std::setw(20) << "Galutinis (Vid.)"
+        << std::setw(20) << "Galutinis (Med.)" << "\n";
+
+    f << string(70, '-') << "\n";
+
+    for (const Studentas& B : grupe)
+    {
+        f << std::left << std::setw(15) << B.pavarde
+            << std::setw(15) << B.vardas
+            << std::setw(20) << std::fixed << std::setprecision(2) << B.galutinisVid
+            << std::setw(20) << B.galutinisMed << "\n";
+    }
+}
+
+void issaugotiIFaila(const string& failas, const vector<Studentas>& grupe)
+{
+    issaugoti(failas, grupe);
+}
+
+void issaugotiIFaila(const string& failas, const list<Studentas>& grupe)
+{
+    issaugoti(failas, grupe);
+}
