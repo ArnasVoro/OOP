@@ -32,5 +32,9 @@ Taip pat pastebėta, kad list konteineris buvo gerokai greitesnis rikiuojant stu
 
 <img width="324" height="171" alt="image" src="https://github.com/user-attachments/assets/38971e72-8647-4b22-8955-570354ed0904" />
 <img width="330" height="177" alt="image" src="https://github.com/user-attachments/assets/166e0020-759b-4074-90f6-65d5f1cd07c4" />
+<img width="328" height="171" alt="image" src="https://github.com/user-attachments/assets/a9f91b9e-f566-47e5-9f75-11937795b3a5" />
+<img width="366" height="184" alt="image" src="https://github.com/user-attachments/assets/a48c57be-6566-46ed-9324-eff0f027dd6e" />
+
+
 
 
