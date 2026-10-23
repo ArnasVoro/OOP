@@ -20,3 +20,9 @@ double skaiciuotiVidurki(const Studentas& A);
 double skaiciuotiMediana(const Studentas& A);
 bool rikiuotiPagalVarda(const Studentas& A, const Studentas& B);
 void skaiciuotiGalutinius(Studentas& A);
+
+void nuskaitytiIsFailo(const string& failas, vector<Studentas>& grupe);
+void nuskaitytiIsFailo(const string& failas, list<Studentas>& grupe);
+
+void issaugotiIFaila(const string& failas, const vector<Studentas>& grupe);
+void issaugotiIFaila(const string& failas, const list<Studentas>& grupe);
