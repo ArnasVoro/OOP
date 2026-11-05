@@ -5,18 +5,14 @@
 #include <sstream>
 #include <iomanip>
 #include <stdexcept>
-
-using std::sort;
-using std::ifstream;
-using std::ofstream;
-using std::getline;
-using std::stringstream;
+#include <utility>
 
 double skaiciuotiVidurki(const Studentas& A)
 {
     if (A.paz.size() <= 1) return 0.0;
 
-    double suma = 0;
+    double suma = 0.0;
+
     for (size_t i = 0; i < A.paz.size() - 1; i++)
         suma += A.paz[i];
 
@@ -28,13 +24,16 @@ double skaiciuotiMediana(const Studentas& A)
     if (A.paz.size() <= 1) return 0.0;
 
     vector<int> nd;
+
     for (size_t i = 0; i < A.paz.size() - 1; i++)
         nd.push_back(A.paz[i]);
 
-    sort(nd.begin(), nd.end());
+    std::sort(nd.begin(), nd.end());
 
     int n = static_cast<int>(nd.size());
-    if (n % 2 == 1) return nd[n / 2];
+
+    if (n % 2 == 1)
+        return nd[n / 2];
 
     return (nd[n / 2 - 1] + nd[n / 2]) / 2.0;
 }
@@ -51,7 +50,7 @@ void skaiciuotiGalutinius(Studentas& A)
 {
     if (A.paz.empty()) return;
 
-    int egz = A.paz[A.paz.size() - 1];
+    int egz = A.paz.back();
 
     A.galutinisVid = 0.4 * skaiciuotiVidurki(A) + 0.6 * egz;
     A.galutinisMed = 0.4 * skaiciuotiMediana(A) + 0.6 * egz;
@@ -60,33 +59,35 @@ void skaiciuotiGalutinius(Studentas& A)
 template <typename Container>
 void nuskaityti(const string& failas, Container& grupe)
 {
-    ifstream f(failas);
+    std::ifstream f(failas);
 
     if (!f)
-        throw std::runtime_error("Nepavyko atidaryti: " + failas);
+        throw std::runtime_error("Nepavyko atidaryti failo: " + failas);
 
     grupe.clear();
 
     string eilute;
-    getline(f, eilute);
+    std::getline(f, eilute);
 
-    while (getline(f, eilute))
+    while (std::getline(f, eilute))
     {
         if (eilute.empty()) continue;
 
-        stringstream ss(eilute);
+        std::stringstream ss(eilute);
+
         Studentas A;
 
         ss >> A.vardas >> A.pavarde;
 
         int pazymys;
+
         while (ss >> pazymys)
             A.paz.push_back(pazymys);
 
         if (!A.vardas.empty() && !A.pavarde.empty() && !A.paz.empty())
         {
             skaiciuotiGalutinius(A);
-            grupe.push_back(A);
+            grupe.push_back(std::move(A));
         }
     }
 }
@@ -104,24 +105,25 @@ void nuskaitytiIsFailo(const string& failas, list<Studentas>& grupe)
 template <typename Container>
 void issaugoti(const string& failas, const Container& grupe)
 {
-    ofstream f(failas);
+    std::ofstream f(failas);
 
     if (!f)
-        throw std::runtime_error("Nepavyko sukurti: " + failas);
+        throw std::runtime_error("Nepavyko sukurti failo: " + failas);
 
     f << std::left << std::setw(15) << "Pavarde"
         << std::setw(15) << "Vardas"
         << std::setw(20) << "Galutinis (Vid.)"
-        << std::setw(20) << "Galutinis (Med.)" << "\n";
+        << std::setw(20) << "Galutinis (Med.)" << '\n';
 
-    f << string(70, '-') << "\n";
+    f << string(70, '-') << '\n';
 
-    for (const Studentas& B : grupe)
+    for (const Studentas& A : grupe)
     {
-        f << std::left << std::setw(15) << B.pavarde
-            << std::setw(15) << B.vardas
-            << std::setw(20) << std::fixed << std::setprecision(2) << B.galutinisVid
-            << std::setw(20) << B.galutinisMed << "\n";
+        f << std::left << std::setw(15) << A.pavarde
+            << std::setw(15) << A.vardas
+            << std::setw(20) << std::fixed << std::setprecision(2)
+            << A.galutinisVid
+            << std::setw(20) << A.galutinisMed << '\n';
     }
 }
 
