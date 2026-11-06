@@ -5,6 +5,16 @@
 - **Storage:** 1 TB Samsung 970 EVO M.2 NVMe SSD
 
 
+
+Testuoti penki skirtingi duomenų failai:
+1. 1 000 studentų
+2. 10 000 studentų
+3. 100 000 studentų
+4. 1 000 000 studentų
+5. 10 000 000 studentų
+
+
+
 | Studentų skaičius | Konteineris | Failo nuskaitymas (s) | Rikiavimas (s) | Skirstymas (s) | Vargšiukų failas (s) | Kietiakių failas (s) | Bendras laikas (s) |
 |------------------:|-------------|----------------------:|---------------:|---------------:|---------------------:|--------------------:|-------------------:|
 | 1 000 | vector | 0.072649 | 0.020637 | 0.006211 | 0.006918 | 0.006579 | 0.112994 |
