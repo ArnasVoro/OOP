@@ -6,9 +6,9 @@
 
 
 
-# 🎓 Studentų pažymių valdymo sistema
+#  Studentų pažymių valdymo sistema
 
-## 📌 Projekto aprašymas
+##  Projekto aprašymas
 
 Šis projektas – **C++ kalba sukurta studentų pažymių valdymo ir apdorojimo sistema**, skirta studentų akademiniams rezultatams analizuoti, galutiniams įvertinimams apskaičiuoti bei studentams suskirstyti į atitinkamas kategorijas pagal jų mokymosi rezultatus.
 
