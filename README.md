@@ -51,7 +51,17 @@ Taip pat pastebėta, kad list konteineris buvo gerokai greitesnis rikiuojant stu
 
 
 
+## Naudojami STL algoritmai
 
+Projekte naudojami ir lyginami šie STL algoritmai:
+
+- `std::copy_if`
+- `std::remove_if`
+- `std::partition`
+- `std::stable_partition`
+- `std::find`
+
+Taip pat naudojamos konteinerių operacijos, tokios kaip `erase()` ir `splice()`.
 
 
 
