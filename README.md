@@ -64,6 +64,25 @@ Projekte naudojami ir lyginami šie STL algoritmai:
 Taip pat naudojamos konteinerių operacijos, tokios kaip `erase()` ir `splice()`.
 
 
+## Skirstymo strategijos
+
+**1 strategija – kopijavimas į du naujus konteinerius**
+
+Studentai nukopijuojami į du atskirus konteinerius:
+- Vargšiukai (galutinis pažymys < 5).
+- Kietiakai (galutinis pažymys >= 5).
+
+Originalus konteineris išsaugomas.
+
+**2 strategija – kopijavimas ir šalinimas**
+
+Vargšiukai nukopijuojami į atskirą konteinerį, o iš originalaus konteinerio pašalinami.
+
+**3 strategija – optimizuotas skirstymas**
+
+Naudojamos efektyvesnės konteinerių operacijos ir STL algoritmai, siekiant sumažinti vykdymo laiką.
+
+
 
 
 
