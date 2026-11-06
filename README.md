@@ -6,6 +6,22 @@
 
 
 
+# 🎓 Studentų pažymių valdymo sistema
+
+## 📌 Projekto aprašymas
+
+Šis projektas – **C++ kalba sukurta studentų pažymių valdymo ir apdorojimo sistema**, skirta studentų akademiniams rezultatams analizuoti, galutiniams įvertinimams apskaičiuoti bei studentams suskirstyti į atitinkamas kategorijas pagal jų mokymosi rezultatus.
+
+Programa leidžia dirbti tiek su nedideliais, rankiniu būdu įvedamais studentų duomenų kiekiais, tiek su dideliais duomenų rinkiniais, nuskaitomais iš tekstinių failų. Taip pat realizuotas atsitiktinių duomenų generavimas, leidžiantis atlikti įvairius našumo testus ir įvertinti programos efektyvumą apdorojant skirtingo dydžio duomenų rinkinius.
+
+Projektas buvo kuriamas palaipsniui, išleidžiant kelias programos versijas. Kiekvienoje versijoje buvo siekiama ne tik papildyti funkcionalumą, bet ir gerinti programos struktūrą, optimizuoti algoritmus bei efektyviau panaudoti C++ standartinės bibliotekos (STL) teikiamas galimybes.
+
+
+
+
+
+
+
 Testuoti penki skirtingi duomenų failai:
 1. 1 000 studentų
 2. 10 000 studentų
