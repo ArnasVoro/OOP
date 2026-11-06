@@ -46,6 +46,111 @@ Projektas buvo kuriamas palaipsniui, išleidžiant kelias programos versijas. Ki
 
 
 
+<h1> PAGRINDINIAI PROGRAMOS FAILAI</h1>
+
+<h2> <code>main.cpp</code></h2>
+<p><strong><em>Pagrindinis programos failas</em></strong></p>
+
+Tai pagrindinis programos vykdymo failas, kuriame realizuotas vartotojo meniu ir pagrindinė programos veikimo logika.
+
+Pagrindinės atsakomybės:
+
+Pateikia vartotojui programos pasirinkimų meniu.
+
+Leidžia pasirinkti duomenų įvedimo būdą.
+
+Leidžia pasirinkti naudojamą konteinerį (<code>vector</code> arba <code>list</code>).
+
+Iškviečia studentų pažymių skaičiavimo ir rūšiavimo funkcijas.
+
+Leidžia pasirinkti studentų skirstymo strategiją.
+
+Suteikia galimybę paleisti programos našumo testavimą.
+
+Atvaizduoja apdorotus studentų duomenis ir rezultatus.
+
+<h2> <code>Studentas.h</code></h2>
+<p><strong><em>Studento duomenų struktūra</em></strong></p>
+
+Šiame faile aprašoma <code>Studentas</code> struktūra, kurioje saugoma pagrindinė informacija apie kiekvieną studentą.
+
+Saugojami duomenys:
+
+Studentų vardai ir pavardės.
+
+Namų darbų pažymiai.
+
+Egzamino pažymys.
+
+Galutinis pažymys pagal vidurkį.
+
+Galutinis pažymys pagal medianą.
+
+Taip pat pateikiamos funkcijų deklaracijos, skirtos studentų duomenims apdoroti.
+
+<h2> <code>Studentas.cpp</code></h2>
+<p><strong><em>Studentų duomenų apdorojimas</em></strong></p>
+
+Šiame faile realizuojamos funkcijos, susijusios su studentų pažymių skaičiavimu ir duomenų apdorojimu.
+
+Pagrindinės funkcijos:
+
+Aritmetinio namų darbų pažymių vidurkio skaičiavimas.
+
+Namų darbų pažymių medianos skaičiavimas.
+
+Galutinio pažymio apskaičiavimas pagal vidurkį arba medianą.
+
+Studentų duomenų apdorojimas.
+
+<h2> <code>Failai.h</code></h2>
+<p><strong><em>Darbo su failais ir studentų skirstymo deklaracijos</em></strong></p>
+
+Šiame faile pateikiamos funkcijų deklaracijos, susijusios su studentų duomenų failų generavimu, nuskaitymu ir skirstymu į kategorijas.
+
+Taip pat aprašomos skirtingos studentų skirstymo strategijos, naudojamos programos našumo testuose.
+
+<h2> <code>Failai.cpp</code></h2>
+<p><strong><em>Failų generavimas ir studentų skirstymas</em></strong></p>
+
+Šiame faile realizuojamos funkcijos, atsakingos už darbą su studentų duomenų failais ir jų skirstymą į dvi kategorijas.
+
+Pagrindinės funkcijos:
+
+Atsitiktinių studentų duomenų generavimas.
+
+Testinių failų kūrimas.
+
+Studentų duomenų nuskaitymas iš tekstinių failų.
+
+Studentų skirstymas į „vargšiukų“ ir „kietiakų“ kategorijas.
+
+Skirtingų skirstymo strategijų realizavimas:
+
+Strategija
+
+Aprašymas
+
+1 strategija
+
+Studentai kopijuojami į du atskirus konteinerius, išsaugant pradinius duomenis.
+
+2 strategija
+
+„Vargšiukai“ perkeliami į naują konteinerį ir pašalinami iš pradinio.
+
+3 strategija
+
+Optimizuotas skirstymas naudojant konkrečiam konteineriui tinkamus metodus.
+
+<h2> <code>Testavimas.h</code></h2>
+<p><strong><em>Testavimo funkcijų deklaracijos</em></strong></p>
+
+Šiame faile aprašomos funkcijos ir struktūros, naudojamos programos našumo testavimui.
+
+
+
+
 
 
 
