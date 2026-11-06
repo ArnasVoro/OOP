@@ -18,6 +18,34 @@ Projektas buvo kuriamas palaipsniui, išleidžiant kelias programos versijas. Ki
 
 
 
+<h1 align="center"> PROJEKTO TIKSLAS</h1>
+
+<p align="center">
+  <strong>
+    Pagrindinis projekto tikslas – sukurti patogią ir efektyvią studentų pažymių apdorojimo sistemą bei praktiškai išanalizuoti C++ standartinės bibliotekos galimybes.
+  </strong>
+</p>
+
+<h2> PROJEKTO METU SIEKIAMA:</h2>
+
+<h3> 1. Išmokti naudoti skirtingus C++ konteinerius</h3>
+
+<h3> 2. Pritaikyti STL algoritmus realiai programavimo užduočiai</h3>
+
+<h3> 3. Išanalizuoti skirtingų studentų skirstymo strategijų veikimo principus</h3>
+
+<h3> 4. Palyginti <code>vector</code> ir <code>list</code> konteinerių našumą</h3>
+
+<h3> 5. Išmatuoti skirtingų algoritmų vykdymo laiką</h3>
+
+<h3> 6. Išsiaiškinti, kaip duomenų kiekis veikia programos efektyvumą</h3>
+
+<h3> 7. Optimizuoti programos veikimą dirbant su dideliais duomenų rinkiniais</h3>
+
+<h3> 8. Įvertinti atminties ir vykdymo laiko sąnaudas</h3>
+
+
+
 
 
 
