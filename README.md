@@ -38,3 +38,43 @@ Taip pat pastebėta, kad list konteineris buvo gerokai greitesnis rikiuojant stu
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+| Versija | Pakeitimai |
+|---|---|
+| v0.1 | Pradinė studentų pažymių apdorojimo programa |
+| v0.2 | Pridėtas studentų skirstymas į dvi grupes ir greičio testavimas |
+| v0.3 | Optimizuotas studentų skirstymas, palyginti vector ir list konteineriai |
+| v1.0 | Palygintos skirtingos STL algoritmų realizacijos, atlikti našumo testai |
+
+
+
+
+
