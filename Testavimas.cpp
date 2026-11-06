@@ -2,297 +2,474 @@
 #include "Failai.h"
 
 #include <iostream>
-#include <algorithm>
 #include <fstream>
 #include <iomanip>
-#include <stdexcept>
-#include <type_traits>
-#include <utility>
+#include <chrono>
 #include <vector>
 #include <list>
+#include <string>
+#include <sstream>
+#include <limits>
+#include <algorithm>
+#include <type_traits>
+#include <iterator>
 
 using std::cout;
-using std::cin;
-using std::endl;
 using std::string;
 using std::vector;
-using std::fixed;
+using std::list;
 
-template <typename Container, typename Comparator>
-void rikiuoti(Container& grupe, Comparator palyginti)
+// Laiko funkcijos vykdymo trukme.
+
+template <typename F>
+double matuoti(F&& funkcija)
 {
-    if constexpr (std::is_same_v<Container, vector<Studentas>>)
-        std::sort(grupe.begin(), grupe.end(), palyginti);
-    else
-        grupe.sort(palyginti);
+    auto pradzia = std::chrono::steady_clock::now();
+
+    funkcija();
+
+    auto pabaiga = std::chrono::steady_clock::now();
+
+    return std::chrono::duration<double>(
+        pabaiga - pradzia
+    ).count();
 }
+
+// Vienas strategijos testas.
 
 template <typename Container>
-TestoRezultatas testuoti(
-    const string& failoVardas,
-    int kiekis,
-    const string& konteinerioPav,
+double vienasTestas(
+    const string& failas,
     int kriterijus,
-    int rikiavimoKriterijus)
+    int strategija,
+    size_t& vargsiukuKiekis,
+    size_t& kietiakuKiekis
+)
 {
-    TestoRezultatas r;
-    r.kiekis = kiekis;
+    Container studentai, vargsiukai, kietiakiai;
 
-    Container grupe;
+    // Skaitymas nematuojamas.
+    nuskaitytiIsFailo(failas, studentai);
 
-    r.nuskaitymoLaikas = matuoti([&]() {
-        nuskaitytiIsFailo(failoVardas, grupe);
-        });
-
-    r.kiekis = static_cast<int>(grupe.size());
-
-    Container vargsiukai, kietiakiai;
-    int skirstymoKriterijus = (kriterijus == 1) ? 2 : 1;
-
-    r.dalijimoLaikas = matuoti([&]() {
-        skirstytiIGrupes(
-            grupe, vargsiukai, kietiakiai, skirstymoKriterijus);
-        });
-
-    auto palyginti = [rikiavimoKriterijus, kriterijus](
-        const Studentas& A, const Studentas& B)
+    // Matuojamas tik skirstymas.
+    double laikas = matuoti([&]()
         {
-            if (rikiavimoKriterijus == 1)
-            {
-                if (A.vardas != B.vardas)
-                    return A.vardas < B.vardas;
-
-                return A.pavarde < B.pavarde;
-            }
-
-            if (rikiavimoKriterijus == 2)
-            {
-                if (A.pavarde != B.pavarde)
-                    return A.pavarde < B.pavarde;
-
-                return A.vardas < B.vardas;
-            }
-
-            double balasA = (kriterijus == 1)
-                ? A.galutinisMed : A.galutinisVid;
-
-            double balasB = (kriterijus == 1)
-                ? B.galutinisMed : B.galutinisVid;
-
-            if (balasA != balasB)
-                return balasA < balasB;
-
-            if (A.pavarde != B.pavarde)
-                return A.pavarde < B.pavarde;
-
-            return A.vardas < B.vardas;
-        };
-
-    r.rikiavimoLaikas = matuoti([&]() {
-        rikiuoti(grupe, palyginti);
-        rikiuoti(vargsiukai, palyginti);
-        rikiuoti(kietiakiai, palyginti);
+            skirstytiIGrupes(
+                studentai,
+                vargsiukai,
+                kietiakiai,
+                kriterijus,
+                strategija
+            );
         });
 
-    string prefiksas = (konteinerioPav == "vector")
-        ? "vector_" : "list_";
+    vargsiukuKiekis = vargsiukai.size();
 
-    r.vargsiukuIsvedimoLaikas = matuoti([&]() {
-        issaugotiIFaila(
-            prefiksas + "vargsiukai_" + failoVardas, vargsiukai);
-        });
+    if (strategija == 1)
+        kietiakuKiekis = kietiakiai.size();
+    else
+        kietiakuKiekis = studentai.size();
 
-    r.kietiakuIsvedimoLaikas = matuoti([&]() {
-        issaugotiIFaila(
-            prefiksas + "kietiakiai_" + failoVardas, kietiakiai);
-        });
-
-    r.bendrasLaikas = r.nuskaitymoLaikas
-        + r.dalijimoLaikas
-        + r.rikiavimoLaikas
-        + r.vargsiukuIsvedimoLaikas
-        + r.kietiakuIsvedimoLaikas;
-
-    cout << "Failas " << failoVardas << " nuskaitytas per "
-        << r.nuskaitymoLaikas << " sekundziu." << endl;
-
-    cout << "Studentai suskirstyti i dvi grupes per "
-        << r.dalijimoLaikas << " sekundziu." << endl;
-
-    cout << "Studentai surusiuoti pagal pasirinkta kriteriju per "
-        << r.rikiavimoLaikas << " sekundziu." << endl;
-
-    cout << "Failu rasymas uztruko "
-        << r.vargsiukuIsvedimoLaikas
-        + r.kietiakuIsvedimoLaikas
-        << " sekundziu." << endl;
-
-    cout << "Bendras laikas: "
-        << r.bendrasLaikas << " sekundziu." << endl;
-
-    return r;
+    return laikas;
 }
 
-TestoRezultatas testuotiVienaFailaVector(
-    const string& failoVardas,
-    int kiekis,
-    int kriterijus,
-    int rikiavimoKriterijus)
+// Atlieka triju strategiju testus pasirinktam konteineriui.
+
+template <typename Container>
+void vykdytiStrategijuTestus(
+    const string& konteineris,
+    const string& failas,
+    int kartai,
+    int kriterijus
+)
 {
-    return testuoti<vector<Studentas>>(
-        failoVardas, kiekis, "vector", kriterijus, rikiavimoKriterijus);
+    cout << "\n========================================\n";
+    cout << "Konteineris: " << konteineris << '\n';
+    cout << "Failas: " << failas << '\n';
+    cout << "========================================\n";
+
+    cout << "Strategija | Vargsiukai | Kietiakai | Laikas (s)\n";
+
+    std::ofstream csv("v1_rezultatai.txt", std::ios::app);
+
+    if (csv.tellp() == 0)
+    {
+        csv << "konteineris,failas,kriterijus,strategija,"
+            "kartai,vargsiukai,kietiakai,vidurkis_s\n";
+    }
+
+    for (int strategija = 1; strategija <= 3; strategija++)
+    {
+        double suma = 0.0;
+
+        size_t vKiekis = 0;
+        size_t kKiekis = 0;
+
+        for (int i = 0; i < kartai; i++)
+        {
+            size_t v = 0;
+            size_t k = 0;
+
+            double laikas = vienasTestas<Container>(
+                failas,
+                kriterijus,
+                strategija,
+                v,
+                k
+            );
+
+            suma += laikas;
+
+            vKiekis = v;
+            kKiekis = k;
+        }
+
+        double vidurkis = suma / kartai;
+
+        cout << "     " << strategija
+            << "     | " << vKiekis
+            << " | " << kKiekis
+            << " | " << std::fixed
+            << std::setprecision(6)
+            << vidurkis << '\n';
+
+        csv << konteineris << ','
+            << failas << ','
+            << kriterijus << ','
+            << strategija << ','
+            << kartai << ','
+            << vKiekis << ','
+            << kKiekis << ','
+            << vidurkis << '\n';
+    }
 }
 
-TestoRezultatas testuotiVienaFailaList(
-    const string& failoVardas,
-    int kiekis,
-    int kriterijus,
-    int rikiavimoKriterijus)
+// Papildomas vector STL algoritmu palyginimas.
+
+template <typename Predicate>
+double testuotiVectorAlgoritma(
+    const vector<Studentas>& pradinis,
+    Predicate salyga,
+    int algoritmas,
+    size_t& vargsiukuKiekis
+)
 {
-    return testuoti<std::list<Studentas>>(
-        failoVardas, kiekis, "list", kriterijus, rikiavimoKriterijus);
+    // Kopijavimas neatimamas i algoritmo laika.
+    vector<Studentas> darbinis = pradinis;
+
+    vector<Studentas> vargsiukai;
+    vector<Studentas> kietiakiai;
+
+    double laikas = matuoti([&]()
+        {
+            if (algoritmas == 1)
+            {
+                // copy_if: kopijuojame i du atskirus konteinerius.
+
+                std::copy_if(
+                    darbinis.begin(),
+                    darbinis.end(),
+                    std::back_inserter(vargsiukai),
+                    salyga
+                );
+
+                std::copy_if(
+                    darbinis.begin(),
+                    darbinis.end(),
+                    std::back_inserter(kietiakiai),
+                    [&](const Studentas& A)
+                    {
+                        return !salyga(A);
+                    }
+                );
+            }
+            else if (algoritmas == 2)
+            {
+                // remove_if: vargsiukus nukopijuojame,
+                // o is pradinio vektoriaus juos pasaliname.
+
+                std::copy_if(
+                    darbinis.begin(),
+                    darbinis.end(),
+                    std::back_inserter(vargsiukai),
+                    salyga
+                );
+
+                auto riba = std::remove_if(
+                    darbinis.begin(),
+                    darbinis.end(),
+                    salyga
+                );
+
+                darbinis.erase(riba, darbinis.end());
+            }
+            else if (algoritmas == 3)
+            {
+                // partition: suskirsto i dvi dalis,
+                // bet neisaugo pradines tvarkos.
+
+                auto riba = std::partition(
+                    darbinis.begin(),
+                    darbinis.end(),
+                    salyga
+                );
+
+                vargsiukai.assign(
+                    darbinis.begin(),
+                    riba
+                );
+            }
+            else
+            {
+                // stable_partition: suskirsto i dvi dalis,
+                // islaikydamas pradine tvarka.
+
+                auto riba = std::stable_partition(
+                    darbinis.begin(),
+                    darbinis.end(),
+                    salyga
+                );
+
+                vargsiukai.assign(
+                    darbinis.begin(),
+                    riba
+                );
+            }
+        });
+
+    vargsiukuKiekis = vargsiukai.size();
+
+    return laikas;
 }
 
-void testuotiKeliskart(
+void palygintiVectorAlgoritmus(
     int kiekisPaleidimu,
-    int konteineris,
-    int failoPasirinkimas)
+    const string& failoVardas,
+    int kriterijus
+)
 {
-    vector<std::pair<string, int>> failai = {
-        {"studentai_1000.txt", 1000},
-        {"studentai_10000.txt", 10000},
-        {"studentai_100000.txt", 100000},
-        {"studentai_1000000.txt", 1000000},
-        {"studentai_10000000.txt", 10000000}
+    vector<Studentas> pradinis;
+
+    nuskaitytiIsFailo(failoVardas, pradinis);
+
+    cout << "\nPapildomas vector STL algoritmu palyginimas\n";
+    cout << "Failas: " << failoVardas << '\n';
+
+    cout << "Algoritmas | Vargsiukai | Laikas (s)\n";
+
+    const string pavadinimai[] =
+    {
+        "copy_if",
+        "remove_if",
+        "partition",
+        "stable_partition"
     };
 
-    string failoVardas;
-    int studentuKiekis = 0;
+    std::ofstream csv(
+        "v1_vector_algoritmai.txt",
+        std::ios::app
+    );
 
-    if (failoPasirinkimas >= 1 && failoPasirinkimas <= 5)
+    if (csv.tellp() == 0)
+        csv << "failas,algoritmas,kartai,vargsiukai,vidurkis_s\n";
+
+    for (int alg = 1; alg <= 4; alg++)
     {
-        failoVardas = failai[failoPasirinkimas - 1].first;
-        studentuKiekis = failai[failoPasirinkimas - 1].second;
+        double suma = 0.0;
+
+        size_t kiekis = 0;
+
+        for (int i = 0; i < kiekisPaleidimu; i++)
+        {
+            size_t v = 0;
+
+            double laikas = testuotiVectorAlgoritma(
+                pradinis,
+                [kriterijus](const Studentas& A)
+                {
+                    double balas;
+
+                    if (kriterijus == 2)
+                        balas = A.galutinisMed;
+                    else
+                        balas = A.galutinisVid;
+
+                    return balas < 5.0;
+                },
+                alg,
+                v
+            );
+
+            suma += laikas;
+            kiekis = v;
+        }
+
+        double vidurkis = suma / kiekisPaleidimu;
+
+        cout << pavadinimai[alg - 1]
+            << " | " << kiekis
+            << " | " << std::fixed
+            << std::setprecision(6)
+            << vidurkis << '\n';
+
+        csv << failoVardas << ','
+            << pavadinimai[alg - 1] << ','
+            << kiekisPaleidimu << ','
+            << kiekis << ','
+            << vidurkis << '\n';
     }
-    else if (failoPasirinkimas == 6)
+}
+
+// Pagrindine testavimo funkcija.
+
+void testuotiKeliskart(int kiekisPaleidimu)
+{
+    const string failai[] =
     {
-        cout << "Iveskite failo pavadinima: ";
-        cin >> failoVardas;
+        "studentai_1000.txt",
+        "studentai_10000.txt",
+        "studentai_100000.txt",
+        "studentai_1000000.txt",
+        "studentai_10000000.txt"
+    };
+
+    // 1. Failu pasirinkimas.
+
+    cout << "\nPasirinkite, kuriuos failus norite tirti:\n";
+
+    for (int i = 0; i < 5; i++)
+        cout << i + 1 << " - " << failai[i] << '\n';
+
+    cout << "0 - Visi failai\n";
+
+    cout << "\nIveskite numerius, atskirtus tarpais (pvz. 1 3 5): ";
+
+    string pasirinkimai;
+
+    std::cin.ignore(
+        std::numeric_limits<std::streamsize>::max(),
+        '\n'
+    );
+
+    std::getline(std::cin, pasirinkimai);
+
+    vector<int> pasirinktiFailai;
+
+    std::stringstream ss(pasirinkimai);
+
+    int pasirinkimas;
+
+    while (ss >> pasirinkimas)
+    {
+        if (pasirinkimas == 0)
+        {
+            pasirinktiFailai.clear();
+
+            for (int i = 0; i < 5; i++)
+                pasirinktiFailai.push_back(i);
+
+            break;
+        }
+
+        if (pasirinkimas < 1 || pasirinkimas > 5)
+        {
+            cout << "Neteisingas failo numeris: "
+                << pasirinkimas << '\n';
+
+            return;
+        }
+
+        int indeksas = pasirinkimas - 1;
+
+        if (std::find(
+            pasirinktiFailai.begin(),
+            pasirinktiFailai.end(),
+            indeksas
+        ) == pasirinktiFailai.end())
+        {
+            pasirinktiFailai.push_back(indeksas);
+        }
     }
-    else
+
+    if (pasirinktiFailai.empty())
     {
-        cout << "Tokio pasirinkimo nera." << endl;
+        cout << "Nepasirinktas ne vienas failas.\n";
         return;
     }
 
-    std::ifstream f(failoVardas);
-
-    if (!f)
-    {
-        cout << "Nepavyko atidaryti failo: "
-            << failoVardas << endl;
-        return;
-    }
-
-    f.close();
+    // 2. Kriterijaus pasirinkimas.
 
     int kriterijus;
-    cout << "Pagal ka norite skirstyti studentus? "
-        << "(1 - mediana, 2 - vidurkis): ";
-    cin >> kriterijus;
+
+    cout << "\nSkirstymo kriterijus:\n";
+    cout << "1 - Galutinis vidurkis\n";
+    cout << "2 - Galutine mediana\n";
+    cout << "Pasirinkite: ";
+
+    std::cin >> kriterijus;
 
     if (kriterijus != 1 && kriterijus != 2)
     {
-        cout << "Tokio pasirinkimo nera." << endl;
+        cout << "Tokio pasirinkimo nera.\n";
         return;
     }
 
-    int rikiavimoKriterijus;
-    cout << "Pagal ka norite rusiuoti studentus? "
-        << "(1 - vardas, 2 - pavarde, 3 - galutinis): ";
-    cin >> rikiavimoKriterijus;
+    // 3. Konteinerio pasirinkimas.
 
-    if (rikiavimoKriterijus < 1 || rikiavimoKriterijus > 3)
+    int konteineris;
+
+    cout << "\nPasirinkite konteineri:\n";
+    cout << "1 - vector\n";
+    cout << "2 - list\n";
+    cout << "3 - Abu\n";
+    cout << "Pasirinkite: ";
+
+    std::cin >> konteineris;
+
+    if (konteineris < 1 || konteineris > 3)
     {
-        cout << "Tokio pasirinkimo nera." << endl;
+        cout << "Tokio pasirinkimo nera.\n";
         return;
     }
 
-    double skaitymas = 0.0, rikiavimas = 0.0, skirstymas = 0.0;
-    double vargsiukai = 0.0, kietiakiai = 0.0, bendras = 0.0;
+    // 4. Generuojami testiniai failai.
+    // Generuojami visi penki failai, bet tiriami tik pasirinkti.
 
-    string konteinerioPav = (konteineris == 1)
-        ? "vector" : "list";
+    cout << "\nGeneruojami testiniai failai. Palaukite...\n";
 
-    for (int i = 1; i <= kiekisPaleidimu; i++)
+    generuotiTestiniusFailus(pasirinktiFailai);
+
+    // 5. Vykdomi pasirinkti testai.
+
+    for (int idx : pasirinktiFailai)
     {
-        cout << endl << "========== TESTAS " << i << " / "
-            << kiekisPaleidimu << " ==========" << endl;
+        if (konteineris == 1 || konteineris == 3)
+        {
+            vykdytiStrategijuTestus<vector<Studentas>>(
+                "vector",
+                failai[idx],
+                kiekisPaleidimu,
+                kriterijus
+            );
 
-        TestoRezultatas r;
+            palygintiVectorAlgoritmus(
+                kiekisPaleidimu,
+                failai[idx],
+                kriterijus
+            );
+        }
 
-        if (konteineris == 1)
-            r = testuotiVienaFailaVector(
-                failoVardas, studentuKiekis,
-                kriterijus, rikiavimoKriterijus);
-        else
-            r = testuotiVienaFailaList(
-                failoVardas, studentuKiekis,
-                kriterijus, rikiavimoKriterijus);
-
-        if (studentuKiekis == 0)
-            studentuKiekis = r.kiekis;
-
-        skaitymas += r.nuskaitymoLaikas;
-        rikiavimas += r.rikiavimoLaikas;
-        skirstymas += r.dalijimoLaikas;
-        vargsiukai += r.vargsiukuIsvedimoLaikas;
-        kietiakiai += r.kietiakuIsvedimoLaikas;
-        bendras += r.bendrasLaikas;
+        if (konteineris == 2 || konteineris == 3)
+        {
+            vykdytiStrategijuTestus<list<Studentas>>(
+                "list",
+                failai[idx],
+                kiekisPaleidimu,
+                kriterijus
+            );
+        }
     }
 
-    double daliklis = static_cast<double>(kiekisPaleidimu);
-
-    cout << endl;
-    cout << "========== TESTU VIDURKIAI ==========" << endl;
-    cout << "Konteineris: " << konteinerioPav << endl;
-    cout << "Failas: " << failoVardas << endl;
-    cout << "Studentu skaicius: " << studentuKiekis << endl;
-
-    cout << fixed << std::setprecision(6);
-
-    cout << "Failo nuskaitymas: "
-        << skaitymas / daliklis << " s" << endl;
-
-    cout << "Studentu rikiavimas: "
-        << rikiavimas / daliklis << " s" << endl;
-
-    cout << "Studentu skirstymas: "
-        << skirstymas / daliklis << " s" << endl;
-
-    cout << "Vargsiuku failo rasymas: "
-        << vargsiukai / daliklis << " s" << endl;
-
-    cout << "Kietiakiu failo rasymas: "
-        << kietiakiai / daliklis << " s" << endl;
-
-    cout << "Bendras laikas: "
-        << bendras / daliklis << " s" << endl;
-
-    std::ofstream out("v03_rezultatai.csv", std::ios::app);
-
-    if (out)
-    {
-        out << konteinerioPav << ','
-            << failoVardas << ','
-            << studentuKiekis << ','
-            << kriterijus << ','
-            << rikiavimoKriterijus << ','
-            << skaitymas / daliklis << ','
-            << rikiavimas / daliklis << ','
-            << skirstymas / daliklis << ','
-            << vargsiukai / daliklis << ','
-            << kietiakiai / daliklis << ','
-            << bendras / daliklis << '\n';
-    }
+    cout << "\nTestavimas baigtas.\n";
+    cout << "Rezultatai irasyti i txt failus.\n";
 }
